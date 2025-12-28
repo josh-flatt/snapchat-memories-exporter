@@ -248,7 +248,7 @@ def update_exif_with_exiftool(row: pd.Series) -> None:
     dt_utc_str = dt_utc.strftime("%Y:%m:%d %H:%M:%S")
 
     if image_path is None or pd.isna(image_path) or image_path == "":
-        print(f"❌ File not found, skipping: {image_path}")
+        print(f"❌ File not found, skipping: {dt_utc_str}")
         return
 
     lat_ref = "N" if latitude >= 0 else "S"
