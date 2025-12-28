@@ -1,4 +1,3 @@
-
 import pandas as pd
 import re
 import pytz
@@ -80,7 +79,6 @@ meta = meta.apply(get_file_name, axis=1)
 
 
 def get_datetime_for_df(row: pd.Series) -> pd.Series:
-    
 
     try:
         row["createdate_mod"] = None
@@ -169,7 +167,7 @@ def fix_filetype(row: pd.Series) -> pd.Series:
     try:
         if pd.isna(row["path"]) or row["path"] == "-":
             return row
-        
+
         mp4_file_path = f"./downloads/{row['filename'][:-4]}.mp4"
         jpg_file_path = f"./downloads/{row['filename'][:-4]}.jpg"
 
@@ -228,12 +226,14 @@ def get_localized_dt_and_offset(
 
     return dt_str, offset_str
 
+
 progress_bar = tqdm(
     total=df1.shape[0],
     desc="Updating EXIF",
     unit="file",
     disable=False,
 )
+
 
 def update_exif_with_exiftool(row: pd.Series) -> None:
     progress_bar.update(1)

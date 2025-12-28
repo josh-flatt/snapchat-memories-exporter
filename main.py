@@ -30,7 +30,7 @@ async def utc_filename(timestamp: str, url: str) -> Path:
     dt = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S UTC")
     dt = dt.replace(tzinfo=pytz.utc)
     ext = "mp4" if ".mp4" in url.lower() else "jpg"
-    out_path = os.path.join("./downloads",f"{dt.strftime('%Y-%m-%d_%H-%M-%S')}.{ext}")
+    out_path = os.path.join("./downloads", f"{dt.strftime('%Y-%m-%d_%H-%M-%S')}.{ext}")
     return Path(out_path)
 
 
@@ -83,7 +83,7 @@ async def main():
         getting_urls = tqdm(total=len(memories), desc="Retrieving", unit="file")
 
         tasks_to_download = []
-        
+
         for item in memories:
             url = item.get("Download Link")
             ts = item.get("Date")
@@ -93,10 +93,7 @@ async def main():
             getting_urls.update(1)
         getting_urls.close()
 
-    stats = {
-        "mb": 0.0,
-        "done": load_checkpoint()
-    }
+    stats = {"mb": 0.0, "done": load_checkpoint()}
 
     failures = []
     sem = asyncio.Semaphore(CONCURRENCY)
@@ -106,7 +103,8 @@ async def main():
 
         to_process = [
             # if not path.exists() and str(path) not in stats["done"]
-            (url, timestamp) for (url, timestamp) in tasks_to_download
+            (url, timestamp)
+            for (url, timestamp) in tasks_to_download
         ]
 
         progress = tqdm(total=len(to_process), desc="Downloading", unit="file")
@@ -115,7 +113,9 @@ async def main():
             await download_one(session, sem, url, timestamp, failures, stats)
             progress.update(1)
 
-        await asyncio.gather(*(wrapped(url, timestamp) for url, timestamp in to_process))
+        await asyncio.gather(
+            *(wrapped(url, timestamp) for url, timestamp in to_process)
+        )
         progress.close()
 
         elapsed = time.time() - start_time
