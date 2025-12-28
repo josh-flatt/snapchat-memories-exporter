@@ -8,7 +8,7 @@ import subprocess
 from tqdm.asyncio import tqdm
 
 
-df: pd.DataFrame = pd.read_json("./temp/file_info.json", orient="records")
+df: pd.DataFrame = pd.read_json("./resources/temp/file_info.json", orient="records")
 
 
 def get_join_col(row: pd.Series) -> pd.Series:
@@ -28,7 +28,7 @@ df = df.apply(get_join_col, axis=1)
 df = df.apply(extract_lat_long, axis=1)
 
 
-metadata = pd.read_csv("./temp/filemetadata.csv", sep="#")
+metadata = pd.read_csv("./resources/temp/filemetadata.csv", sep="#")
 metadata["file"] = f"./" + metadata["file"]
 
 

@@ -12,7 +12,7 @@ from tqdm import tqdm
 CONCURRENCY = 50
 RETRIES = 3
 OUTPUT_DIR = Path("./downloads")
-CHECKPOINT = Path("./temp/checkpoint.txt")
+CHECKPOINT = Path("./resources/temp/checkpoint.txt")
 
 
 def load_checkpoint():
