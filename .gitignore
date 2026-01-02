@@ -210,3 +210,4 @@ __marimo__/
 resources/*/*.csv
 resources/*/*.json
 resources/*/*.txt
+*.ipynb
