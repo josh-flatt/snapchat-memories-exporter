@@ -398,10 +398,10 @@ errors = errors.apply(check_longitude, axis=1)
 errors = errors.apply(check_timezone, axis=1)
 errors = errors.apply(get_need_fix, axis=1)
 
-
+print(f"Total files checked: {errors.shape[0]}")
 needs_fix = errors[errors["need_fix"]]
 
-
+print(f"Files with errors: {needs_fix.shape[0]}")
 needs_fix.to_json(
     "./resources/temp/needs_fix.json", orient="index", default_handler=str, indent=4
 )
