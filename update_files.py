@@ -6,14 +6,44 @@ from timezonefinder import TimezoneFinder
 from datetime import datetime
 import subprocess
 from tqdm.asyncio import tqdm
+import string
+
+
+def number_to_letters(n: int) -> str:
+    """0 -> A, 25 -> Z, 26 -> AA, etc."""
+    letters = string.ascii_uppercase
+    result = ""
+    while True:
+        n, rem = divmod(n, 26)
+        result = letters[rem] + result
+        if n == 0:
+            break
+        n -= 1
+    return result
 
 
 df: pd.DataFrame = pd.read_json("./resources/temp/file_info.json", orient="records")
 
+###############################
+# def get_join_col(row: pd.Series) -> pd.Series:
+#     row["file_dt"] = f"{row['Date'].strftime('%Y-%m-%d_%H-%M-%S')}"
+#     return row
+
+timestamp_counter = {}
+
 
 def get_join_col(row: pd.Series) -> pd.Series:
-    row["file_dt"] = f"{row['Date'].strftime('%Y-%m-%d_%H-%M-%S')}"
+    ts_str = row["Date"].strftime("%Y-%m-%d_%H-%M-%S")
+
+    index = timestamp_counter.get(ts_str, 0)
+    timestamp_counter[ts_str] = index + 1
+
+    suffix = number_to_letters(index)
+    row["file_dt"] = f"{ts_str}-{suffix}"
     return row
+
+
+##################################################
 
 
 def extract_lat_long(row: pd.Series) -> pd.Series:
@@ -65,14 +95,28 @@ def convert_lat_long_to_decimal_degrees(row: pd.Series) -> pd.Series:
     return row
 
 
+#############################################
+# def get_file_name(row: pd.Series) -> pd.Series:
+#     path_parts = row["file"].split("/")
+#     file = path_parts[-1]
+#     row["filename"] = file
+#     row["extension"] = file.split(".")[-1].lower()
+#     row["file_dt"] = file.split(".")[0]
+#     return row
 def get_file_name(row: pd.Series) -> pd.Series:
-    path_parts = row["file"].split("/")
-    file = path_parts[-1]
+    file = os.path.basename(row["file"])
+    name, ext = os.path.splitext(file)
+
     row["filename"] = file
-    row["extension"] = file.split(".")[-1].lower()
-    row["file_dt"] = file.split(".")[0]
+    row["extension"] = ext[1:].lower()
+
+    # name is YYYY-MM-DD_HH-MM-SS-A
+    row["file_dt"] = name
+
     return row
 
+
+#############################################
 
 meta = metadata.apply(convert_lat_long_to_decimal_degrees, axis=1)
 meta = meta.apply(get_file_name, axis=1)
@@ -87,7 +131,12 @@ def get_datetime_for_df(row: pd.Series) -> pd.Series:
             createdate_wtz = createdate.astimezone(pytz.timezone("America/Chicago"))
             row["createdate_mod"] = createdate_wtz
 
-        date = datetime.strptime(row["file_dt"], "%Y-%m-%d_%H-%M-%S")
+        #######################################
+        # date = datetime.strptime(row["file_dt"], "%Y-%m-%d_%H-%M-%S")
+        base_dt = row["file_dt"].rsplit("-", 1)[0]
+        date = datetime.strptime(base_dt, "%Y-%m-%d_%H-%M-%S")
+
+        #######################################
         dt_w_tz = date.astimezone(pytz.UTC)
         row["datetime"] = dt_w_tz
         row["dt_join"] = f"{dt_w_tz}"
