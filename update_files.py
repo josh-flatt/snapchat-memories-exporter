@@ -7,6 +7,7 @@ from datetime import datetime
 import subprocess
 from tqdm.asyncio import tqdm
 import string
+import json
 
 
 def number_to_letters(n: int) -> str:
@@ -22,7 +23,11 @@ def number_to_letters(n: int) -> str:
     return result
 
 
-df: pd.DataFrame = pd.read_json("./resources/temp/file_info.json", orient="records")
+with open("./resources/json/memories_history.json", "r") as f:
+    memories = json.load(f)["Saved Media"]
+
+df = pd.DataFrame(memories)
+df["Date"] = pd.to_datetime(df["Date"], format="%Y-%m-%d %H:%M:%S UTC", utc=True)
 
 
 timestamp_counter = {}
@@ -51,8 +56,9 @@ df = df.apply(get_join_col, axis=1)
 df = df.apply(extract_lat_long, axis=1)
 
 
-metadata = pd.read_csv("./resources/temp/filemetadata.csv", sep=",")
+metadata = pd.read_json("./resources/temp/filemetadata.json", orient="index")
 metadata["file"] = f"./" + metadata["file"]
+metadata.reset_index(drop=True, inplace=True)
 
 
 def convert_lat_long_to_decimal_degrees(row: pd.Series) -> pd.Series:

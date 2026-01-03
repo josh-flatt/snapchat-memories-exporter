@@ -132,8 +132,5 @@ def get_latitude(
 df = file_df.apply(get_metadata, axis=1)
 progress_bar.close()
 
-print("Saving metadata to filemetadata.csv")
-df.to_csv("./resources/temp/filemetadata.csv", index=False, sep=",")
-
 print("Saving metadata to filemetadata.json")
 df.to_json("./resources/temp/filemetadata.json", orient="index", default_handler=str)
