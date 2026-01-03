@@ -347,7 +347,7 @@ def update_exif_with_exiftool(row: pd.Series) -> None:
         f"-ExifIFD:DateTimeDigitized={local_dt}",
         f"-OffsetTimeOriginal={dynamic_tz}",
         # QuickTime tags (must be set to UTC time)
-        f"-QuickTime:CreationDate={dt_utc_str}",
+        f"-QuickTime:CreationDate={dt_utc_str}{dynamic_tz}",
         f"-QuickTime:TrackCreateDate={dt_utc_str}",
         f"-QuickTime:MediaCreateDate={dt_utc_str}",
         f"-QuickTime:TimeZone={dynamic_tz}",
@@ -376,7 +376,7 @@ def update_exif_with_exiftool(row: pd.Series) -> None:
         f"-ExifIFD:DateTimeDigitized={local_dt}",
         f"-OffsetTimeOriginal={dynamic_tz}",
         # QuickTime tags (must be set to UTC time)
-        f"-QuickTime:CreationDate={dt_utc_str}",
+        f"-QuickTime:CreationDate={dt_utc_str}{dynamic_tz}",
         f"-QuickTime:TrackCreateDate={dt_utc_str}",
         f"-QuickTime:MediaCreateDate={dt_utc_str}",
         f"-QuickTime:TimeZone={dynamic_tz}",
