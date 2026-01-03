@@ -120,12 +120,9 @@ def get_datetime_for_df(row: pd.Series) -> pd.Series:
             createdate_wtz = createdate.astimezone(pytz.timezone("America/Chicago"))
             row["createdate_mod"] = createdate_wtz
 
-        #######################################
-        # date = datetime.strptime(row["file_dt"], "%Y-%m-%d_%H-%M-%S")
         base_dt = row["file_dt"].rsplit("-", 1)[0]
         date = datetime.strptime(base_dt, "%Y-%m-%d_%H-%M-%S")
 
-        #######################################
         dt_w_tz = date.astimezone(pytz.UTC)
         row["datetime"] = dt_w_tz
         row["dt_join"] = f"{dt_w_tz}"
@@ -349,7 +346,7 @@ def update_exif_with_exiftool(row: pd.Series) -> None:
         # QuickTime Tags (Apple/iOS)
         f"-QuickTime:LocationLatitude={latitude}",
         f"-QuickTime:LocationLongitude={longitude}",
-        # # Generic GPS tags (Broader compatibility)
+        # Generic GPS tags (Broader compatibility)
         f"-GPSLatitude={latitude}",
         f"-GPSLongitude={longitude}",
         f"-GPSLatitudeRef={lat_ref}",

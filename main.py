@@ -39,7 +39,7 @@ def number_to_letters(n: int) -> str:
         result = letters[rem] + result
         if n == 0:
             break
-        n -= 1  # Adjust for 1-based carry
+        n -= 1
     return result
 
 

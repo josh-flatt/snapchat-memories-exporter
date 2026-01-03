@@ -52,8 +52,6 @@ def get_metadata(row: pd.Series) -> pd.Series:
     )
     metadata = result.stdout.strip().split("\n")[0].split("\t")
 
-    # if len(metadata) < 3:
-    #     metadata = metadata + ["-"] * (3 - len(metadata))
     row["createdate"] = metadata[0]
     row["gpslatitude"] = metadata[1]
     row["gpslongitude"] = metadata[2]
@@ -92,7 +90,6 @@ def get_longitude(
             .replace(" ", "")
             .split("#")
         )
-        # parts = gps_str[:-1].split("'")
         degrees = float(parts[0])
         minutes = float(parts[1]) / 60.00
         seconds = float(parts[2]) / 3600.00
