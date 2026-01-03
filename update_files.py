@@ -24,10 +24,6 @@ def number_to_letters(n: int) -> str:
 
 df: pd.DataFrame = pd.read_json("./resources/temp/file_info.json", orient="records")
 
-###############################
-# def get_join_col(row: pd.Series) -> pd.Series:
-#     row["file_dt"] = f"{row['Date'].strftime('%Y-%m-%d_%H-%M-%S')}"
-#     return row
 
 timestamp_counter = {}
 
@@ -41,9 +37,6 @@ def get_join_col(row: pd.Series) -> pd.Series:
     suffix = number_to_letters(index)
     row["file_dt"] = f"{ts_str}-{suffix}"
     return row
-
-
-##################################################
 
 
 def extract_lat_long(row: pd.Series) -> pd.Series:
@@ -95,14 +88,6 @@ def convert_lat_long_to_decimal_degrees(row: pd.Series) -> pd.Series:
     return row
 
 
-#############################################
-# def get_file_name(row: pd.Series) -> pd.Series:
-#     path_parts = row["file"].split("/")
-#     file = path_parts[-1]
-#     row["filename"] = file
-#     row["extension"] = file.split(".")[-1].lower()
-#     row["file_dt"] = file.split(".")[0]
-#     return row
 def get_file_name(row: pd.Series) -> pd.Series:
     file = os.path.basename(row["file"])
     name, ext = os.path.splitext(file)
@@ -115,8 +100,6 @@ def get_file_name(row: pd.Series) -> pd.Series:
 
     return row
 
-
-#############################################
 
 meta = metadata.apply(convert_lat_long_to_decimal_degrees, axis=1)
 meta = meta.apply(get_file_name, axis=1)
@@ -409,7 +392,6 @@ def update_exif_with_exiftool(row: pd.Series) -> None:
 
         if "1 image files updated" in result.stdout:
             pass
-            # print(f"✅ Updated: {image_path}")
         else:
             print(f"⚠️ Warning updating {image_path}: {result.stderr.strip()}")
 

@@ -118,7 +118,6 @@ def get_latitude(
             .replace(" ", "")
             .split("#")
         )
-        # parts = gps_str[:-1].split("'")
         degrees = float(parts[0])
         minutes = float(parts[1]) / 60.00
         seconds = float(parts[2]) / 3600.00
