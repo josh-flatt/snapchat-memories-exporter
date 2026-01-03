@@ -130,4 +130,6 @@ df = file_df.apply(get_metadata, axis=1)
 progress_bar.close()
 
 print("Saving metadata to filemetadata.json")
-df.to_json("./resources/temp/filemetadata.json", orient="index", default_handler=str)
+df.to_json(
+    "./resources/temp/filemetadata.json", orient="index", default_handler=str, indent=4
+)
